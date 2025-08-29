@@ -1,5 +1,7 @@
 FROM ghcr.io/srl-labs/vrnetlab-base:0.1.0
 
+RUN apt update -y && apt install ovmf -y
+
 ARG IMAGE
 COPY $IMAGE* /
 COPY *.py /

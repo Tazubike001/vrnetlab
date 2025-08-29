@@ -83,6 +83,8 @@ class XRv9k_vm(vrnetlab.VM):
                 "telnet:0.0.0.0:50%02d,server,nowait" % (self.num + 2),
                 "-serial",
                 "telnet:0.0.0.0:50%02d,server,nowait" % (self.num + 3),
+                "-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd",
+                "-drive if=pflash,format=raw,file=/usr/share/OVMF/OVMF_VARS.fd",
             ]
         )
 
@@ -95,7 +97,7 @@ class XRv9k_vm(vrnetlab.VM):
         res.extend(
             [
                 "-device",
-                "virtio-net-pci,netdev=ctrl-dummy,id=ctrl-dummy,mac=%s"
+                "virtio-net-pci,netdev=ctrl-dummy,id=ctrl-dummy,mac=%s,csum=off,guest_csum=off"
                 % vrnetlab.gen_mac(0),
                 "-netdev",
                 "tap,ifname=ctrl-dummy,id=ctrl-dummy,script=no,downscript=no",
@@ -105,7 +107,7 @@ class XRv9k_vm(vrnetlab.VM):
         res.extend(
             [
                 "-device",
-                "virtio-net-pci,netdev=dev-dummy,id=dev-dummy,mac=%s"
+                "virtio-net-pci,netdev=dev-dummy,id=dev-dummy,mac=%s,csum=off,guest_csum=off"
                 % vrnetlab.gen_mac(0),
                 "-netdev",
                 "tap,ifname=dev-dummy,id=dev-dummy,script=no,downscript=no",
@@ -297,15 +299,15 @@ if __name__ == "__main__":
         "--trace", action="store_true", help="enable trace level logging"
     )
     parser.add_argument("--hostname", default="vr-xrv9k", help="Router hostname")
-    parser.add_argument("--username", default="vrnetlab", help="Username")
-    parser.add_argument("--password", default="VR-netlab9", help="Password")
+    parser.add_argument("--username", default="admin", help="Username")
+    parser.add_argument("--password", default="admin", help="Password")
     parser.add_argument("--nics", type=int, default=128, help="Number of NICS")
     parser.add_argument("--install", action="store_true", help="Pre-install image")
     parser.add_argument(
         "--vcpu", type=int, default=4, help="Number of cpu cores to use"
     )
     parser.add_argument(
-        "--ram", type=int, default=16384, help="Number RAM to use in MB"
+        "--ram", type=int, default=20480, help="Number RAM to use in MB"
     )
     parser.add_argument(
         "--connection-mode",
